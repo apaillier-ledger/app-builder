@@ -1,4 +1,4 @@
-FROM ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder-lite:latest
+FROM ghcr.io/apaillier-ledger/app-builder/app-builder-lite:latest
 
 # Define rustup/cargo home directories
 ENV RUSTUP_HOME=/opt/rustup \
