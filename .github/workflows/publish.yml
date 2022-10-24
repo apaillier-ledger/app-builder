@@ -36,8 +36,6 @@ jobs:
     if: contains(needs.mods_list.outputs.modified_files, 'lite/Dockerfile')
     permissions:
       packages: write
-    env:
-      IMAGE_NAME: ${{ github.event.repository.name }}-lite
 
     steps:
       - name: Clone
@@ -49,6 +47,10 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get image name
+        run: |
+          echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}-lite" >>${GITHUB_ENV}
 
       - name: Extract metadata
         id: meta
@@ -80,8 +82,6 @@ jobs:
     if: always() && (needs.builder_lite.result == 'success' || (needs.builder_lite.result == 'skipped' && contains(needs.mods_list.outputs.modified_files, 'Dockerfile')))
     permissions:
       packages: write
-    env:
-      IMAGE_NAME: ${{ github.event.repository.name }}
 
     steps:
       - name: Clone
@@ -93,6 +93,10 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get image name
+        run: |
+          echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
 
       - name: Extract metadata
         id: meta
