@@ -10,7 +10,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_PATH: ${{ github.repository }}
   BUILD_PLATFORMS: linux/amd64,linux/arm64
 
 jobs:
@@ -36,8 +35,6 @@ jobs:
     if: contains(needs.mods_list.outputs.modified_files, 'lite/Dockerfile')
     permissions:
       packages: write
-    env:
-      IMAGE_NAME: ${{ github.event.repository.name }}-lite
 
     steps:
       - name: Clone
@@ -50,11 +47,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get lowercase image name
+        run: |
+          echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}-lite" >>${GITHUB_ENV}
+
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PATH }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Set-up QEMU
         uses: docker/setup-qemu-action@v2
@@ -65,7 +66,7 @@ jobs:
       - name: Build and push container
         uses: docker/build-push-action@v3
         env:
-          IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_PATH }}/${{ env.IMAGE_NAME }}
+          IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         with:
           file: lite/Dockerfile
           platforms: ${{ env.BUILD_PLATFORMS }}
@@ -80,8 +81,6 @@ jobs:
     if: always() && (needs.builder_lite.result == 'success' || (needs.builder_lite.result == 'skipped' && contains(needs.mods_list.outputs.modified_files, 'Dockerfile')))
     permissions:
       packages: write
-    env:
-      IMAGE_NAME: ${{ github.event.repository.name }}
 
     steps:
       - name: Clone
@@ -94,11 +93,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get lowercase image name
+        run: |
+          echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PATH }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Set-up QEMU
         uses: docker/setup-qemu-action@v2
@@ -109,7 +112,7 @@ jobs:
       - name: Build and push container
         uses: docker/build-push-action@v3
         env:
-          IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_PATH }}/${{ env.IMAGE_NAME }}
+          IMAGE: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         with:
           file: Dockerfile
           platforms: ${{ env.BUILD_PLATFORMS }}
