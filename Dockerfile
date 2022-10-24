@@ -4,6 +4,7 @@ FROM ghcr.io/apaillier-ledger/app-builder/app-builder-lite:latest
 ENV RUSTUP_HOME=/opt/rustup \
     CARGO_HOME=/opt/.cargo
 
+
 RUN apk add rustup
 
 RUN rustup-init --default-toolchain stable -y
