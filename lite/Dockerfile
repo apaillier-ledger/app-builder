@@ -12,6 +12,7 @@ RUN apk add \
         cmocka-dev \
         doxygen \
         gcc-arm-none-eabi \
+        gcompat \
         git \
         lld \
         make \
