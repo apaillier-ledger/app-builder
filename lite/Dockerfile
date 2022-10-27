@@ -13,6 +13,7 @@ RUN apk add \
         doxygen \
         gcc-arm-none-eabi \
         git \
+        libc6-compat \
         lld \
         make \
         musl-dev \
