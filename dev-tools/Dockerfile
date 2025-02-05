@@ -1,4 +1,4 @@
-FROM ghcr.io/ledgerhq/ledger-app-builder/ledger-app-builder:latest
+FROM ghcr.io/apaillier-ledger/ledger-app-builder/ledger-app-builder:latest
 
 RUN apt install -y --no-install-recommends \
         imagemagick \
